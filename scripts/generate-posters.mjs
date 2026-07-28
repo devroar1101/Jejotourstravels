@@ -2,10 +2,11 @@
 /**
  * Pure-Node poster + OG generator. No ffmpeg, no npm dependencies.
  *
- * Coastal Editorial palette — brand navy and teal on warm paper. Media posters
- * are rich navy fields with a teal glow (dark enough for paper-white captions);
- * the ambient poster is a soft light teal wash for the light sections. These are
- * the committed placeholders so the repo previews and builds green before real
+ * Coastal Editorial palette — brand navy, teal and warm paper. Instead of flat
+ * gradients these compose an atmospheric "scene": a graded sky, a lit horizon,
+ * a sun/atmosphere glow, water reflection and haze bands, with light grain and
+ * a vignette. Still abstract and on-brand, but reads photographic. They are the
+ * committed placeholders so the repo previews and builds green before real
  * footage arrives. Run: `npm run posters`.
  */
 import { deflateSync } from 'node:zlib';
@@ -21,10 +22,11 @@ mkdirSync(OG, { recursive: true });
 
 // ---- Brand palette ---------------------------------------------------------
 const NAVY = [19, 41, 76];
-const NAVY2 = [10, 22, 42];
+const NAVY2 = [10, 20, 40];
 const TEAL = [20, 163, 160];
 const TEAL_DEEP = [12, 110, 108];
 const PAPER = [247, 245, 240];
+const BRIGHT = [206, 232, 226]; // pale teal-paper, the lit horizon
 
 const lerp = (a, b, t) => a + (b - a) * t;
 const mix = (c1, c2, t) => [
@@ -33,6 +35,10 @@ const mix = (c1, c2, t) => [
   lerp(c1[2], c2[2], t),
 ];
 const clamp = (v) => Math.max(0, Math.min(255, Math.round(v)));
+const smooth = (t) => {
+  const x = Math.max(0, Math.min(1, t));
+  return x * x * (3 - 2 * x);
+};
 
 function mulberry32(seed) {
   return function () {
@@ -67,129 +73,250 @@ function pngChunk(type, data) {
   crc.writeUInt32BE(crc32(body), 0);
   return Buffer.concat([len, body, crc]);
 }
+/**
+ * Median-cut colour quantisation to <=256 colours. The scene gamut is a narrow
+ * navy->teal->paper ramp, so an indexed palette reproduces it cleanly and
+ * compresses several times smaller than truecolour.
+ */
+function medianCut(pixels, maxColors) {
+  if (pixels.length === 0) return [[0, 0, 0]];
+  let boxes = [pixels];
+  while (boxes.length < maxColors) {
+    let bi = -1;
+    let brange = -1;
+    let bchan = 0;
+    for (let i = 0; i < boxes.length; i++) {
+      const bx = boxes[i];
+      if (bx.length < 2) continue;
+      const mn = [255, 255, 255];
+      const mx = [0, 0, 0];
+      for (const p of bx)
+        for (let c = 0; c < 3; c++) {
+          if (p[c] < mn[c]) mn[c] = p[c];
+          if (p[c] > mx[c]) mx[c] = p[c];
+        }
+      const rng = [mx[0] - mn[0], mx[1] - mn[1], mx[2] - mn[2]];
+      const m = Math.max(rng[0], rng[1], rng[2]);
+      if (m > brange) {
+        brange = m;
+        bi = i;
+        bchan = rng.indexOf(m);
+      }
+    }
+    if (bi < 0) break;
+    const bx = boxes[bi];
+    bx.sort((a, b) => a[bchan] - b[bchan]);
+    const mid = bx.length >> 1;
+    boxes.splice(bi, 1, bx.slice(0, mid), bx.slice(mid));
+  }
+  return boxes.map((bx) => {
+    const s = [0, 0, 0];
+    for (const p of bx) for (let c = 0; c < 3; c++) s[c] += p[c];
+    const n = bx.length || 1;
+    return [s[0] / n, s[1] / n, s[2] / n];
+  });
+}
+
 function encodePNG(width, height, rgb) {
-  const sig = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
+  // Build a palette from a subsample of the image.
+  const N = width * height;
+  const step = Math.max(1, Math.floor(N / 24000));
+  const sample = [];
+  for (let i = 0; i < N; i += step)
+    sample.push([rgb[i * 3], rgb[i * 3 + 1], rgb[i * 3 + 2]]);
+  const palette = medianCut(sample, 256);
+
+  // 32^3 nearest-colour LUT for fast mapping.
+  const lut = new Uint8Array(32768);
+  for (let r = 0; r < 32; r++)
+    for (let g = 0; g < 32; g++)
+      for (let b = 0; b < 32; b++) {
+        const R = r * 8 + 4;
+        const G = g * 8 + 4;
+        const B = b * 8 + 4;
+        let best = 0;
+        let bd = 1e9;
+        for (let p = 0; p < palette.length; p++) {
+          const dr = R - palette[p][0];
+          const dg = G - palette[p][1];
+          const db = B - palette[p][2];
+          const d = dr * dr + dg * dg + db * db;
+          if (d < bd) {
+            bd = d;
+            best = p;
+          }
+        }
+        lut[(r << 10) | (g << 5) | b] = best;
+      }
+
+  // 8x8 Bayer matrix — ordered dithering breaks up quantisation banding
+  // without the random noise that would wreck compression.
+  const BAYER = [
+    0, 32, 8, 40, 2, 34, 10, 42, 48, 16, 56, 24, 50, 18, 58, 26, 12, 44, 4, 36,
+    14, 46, 6, 38, 60, 28, 52, 20, 62, 30, 54, 22, 3, 35, 11, 43, 1, 33, 9, 41,
+    51, 19, 59, 27, 49, 17, 57, 25, 15, 47, 7, 39, 13, 45, 5, 37, 63, 31, 55, 23,
+    61, 29, 53, 21,
+  ];
+  const AMP = 14; // dither amplitude in 0-255
+  const cl = (v) => (v < 0 ? 0 : v > 255 ? 255 : v);
+  const raw = Buffer.alloc((width + 1) * height);
+  for (let y = 0; y < height; y++) {
+    raw[y * (width + 1)] = 0;
+    for (let x = 0; x < width; x++) {
+      const i = (y * width + x) * 3;
+      const d = (BAYER[(y & 7) * 8 + (x & 7)] / 64 - 0.5) * AMP;
+      const r = cl(rgb[i] + d);
+      const g = cl(rgb[i + 1] + d);
+      const b = cl(rgb[i + 2] + d);
+      raw[y * (width + 1) + 1 + x] =
+        lut[((r >> 3) << 10) | ((g >> 3) << 5) | (b >> 3)];
+    }
+  }
+
   const ihdr = Buffer.alloc(13);
   ihdr.writeUInt32BE(width, 0);
   ihdr.writeUInt32BE(height, 4);
   ihdr[8] = 8;
-  ihdr[9] = 2;
-  const stride = width * 3;
-  const raw = Buffer.alloc((stride + 1) * height);
-  for (let y = 0; y < height; y++) {
-    raw[y * (stride + 1)] = 0;
-    rgb.copy(raw, y * (stride + 1) + 1, y * stride, y * stride + stride);
-  }
+  ihdr[9] = 3; // indexed colour
+  const plte = Buffer.alloc(palette.length * 3);
+  palette.forEach((c, i) => {
+    plte[i * 3] = clamp(c[0]);
+    plte[i * 3 + 1] = clamp(c[1]);
+    plte[i * 3 + 2] = clamp(c[2]);
+  });
   const idat = deflateSync(raw, { level: 9 });
   return Buffer.concat([
-    sig,
+    Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]),
     pngChunk('IHDR', ihdr),
+    pngChunk('PLTE', plte),
     pngChunk('IDAT', idat),
     pngChunk('IEND', Buffer.alloc(0)),
   ]);
 }
 
 /**
- * Paint a poster. `glow` warms a directional radial; `vignette` darkens or
- * lightens the edges toward `edge`.
+ * Compose an atmospheric scene within the brand palette.
  */
-function paint(width, height, v = {}) {
+function scene(width, height, v = {}) {
   const {
     seed = 1,
-    top = NAVY,
-    base = NAVY2,
-    glow = TEAL,
-    glowX = 0.7,
-    glowY = 0.3,
-    glowStrength = 0.6,
-    glowMix = 0.55,
-    edge = NAVY2,
-    edgeStrength = 0.9,
-    wash = null,
-    washAmount = 0,
+    horizon = 0.62,
+    sunX = 0.7,
+    sunStrength = 0.9,
+    sunColor = BRIGHT,
+    skyTop = NAVY,
+    skyHorizon = TEAL,
+    ground = NAVY,
+    groundBottom = NAVY2,
+    haze = 0.6,
+    reflection = 0.6,
+    // Grain stays 0 so smooth gradients compress to KB scale — the film grain
+    // is a CSS overlay at runtime.
     grain = 0,
+    vignette = 0.85,
   } = v;
   const rng = mulberry32(seed);
   const buf = Buffer.alloc(width * height * 3);
-  const cx = glowX * width;
-  const cy = glowY * height;
-  const maxD = Math.hypot(width, height);
+  const sunPx = sunX * width;
+  const horPx = horizon * height;
+  const sigma = width * 0.26;
+
+  // A shared shoreline colour keeps the sky/water join seamless.
+  const horizonColor = mix(skyHorizon, BRIGHT, 0.5 + haze * 0.2);
+
   for (let y = 0; y < height; y++) {
     const vy = y / height;
     for (let x = 0; x < width; x++) {
       const vx = x / width;
-      let col = mix(top, base, Math.pow(vy, 1.1));
-      const d = Math.hypot(x - cx, y - cy) / maxD;
-      const g = Math.max(0, 1 - d * 2.1) * glowStrength;
-      col = mix(col, glow, g * glowMix);
-      if (wash && washAmount > 0) col = mix(col, wash, g * washAmount);
-      const vig = Math.max(0, Math.hypot(vx - 0.5, vy - 0.5) - 0.28) * edgeStrength;
-      col = mix(col, edge, vig);
-      const n = grain > 0 ? (rng() - 0.5) * grain : 0;
+      let col;
+      if (vy < horizon) {
+        // sky: dark up top, easing continuously into the shoreline colour
+        col = mix(skyTop, horizonColor, smooth(vy / horizon));
+      } else {
+        // water/land: shoreline colour fading to a dark foreground
+        const t = smooth((vy - horizon) / (1 - horizon));
+        col = mix(horizonColor, groundBottom, t);
+        // sun reflection column with a slow ripple
+        const rx = Math.abs(vx - sunX);
+        const ripple = 0.7 + 0.3 * Math.sin(vy * height * 0.045);
+        const refl =
+          Math.max(0, 1 - rx / 0.16) *
+          Math.max(0, 1 - t * 1.1) *
+          reflection *
+          ripple;
+        col = mix(col, sunColor, Math.min(0.7, refl));
+      }
+      // sun / atmosphere glow at the horizon
+      const dx = x - sunPx;
+      const dy = y - horPx;
+      const glow = Math.exp(-(dx * dx + dy * dy) / (2 * sigma * sigma)) * sunStrength;
+      col = mix(col, sunColor, Math.min(0.85, glow));
+      // vignette
+      const vig = Math.max(0, Math.hypot(vx - 0.5, vy - 0.5) - 0.34) * vignette;
+      col = mix(col, NAVY2, vig);
+      // optional light grain (off by default — CSS overlay handles texture)
+      const g = grain > 0 ? (rng() - 0.5) * grain : 0;
       const i = (y * width + x) * 3;
-      buf[i] = clamp(col[0] + n);
-      buf[i + 1] = clamp(col[1] + n);
-      buf[i + 2] = clamp(col[2] + n);
+      buf[i] = clamp(col[0] + g);
+      buf[i + 1] = clamp(col[1] + g);
+      buf[i + 2] = clamp(col[2] + g);
     }
   }
   return encodePNG(width, height, buf);
 }
 
-// Rich navy media field with a teal glow — dark enough for paper captions.
-const media = (extra = {}) => ({
-  top: NAVY,
-  base: NAVY2,
-  glow: TEAL,
-  glowStrength: 0.62,
-  glowMix: 0.6,
-  edge: NAVY2,
-  edgeStrength: 1.0,
-  wash: TEAL,
-  washAmount: 0.14,
-  ...extra,
-});
-
-// ---- Poster set ------------------------------------------------------------
+// ---- Poster set — each evokes its destination through light + horizon ------
 const posters = [
-  { name: 'hero', w: 1600, h: 900, v: media({ seed: 7, glowX: 0.72, glowY: 0.34 }) },
-  { name: 'scrub', w: 1280, h: 720, v: media({ seed: 21, glowX: 0.3, glowY: 0.62, glowStrength: 0.5 }) },
-  { name: 'masked', w: 1600, h: 720, v: media({ seed: 33, glowX: 0.5, glowY: 0.5, glowStrength: 0.8, washAmount: 0.2 }) },
-  // Dark ambient for the enquiry panel.
-  { name: 'ambient-deep', w: 1280, h: 720, v: media({ seed: 44, glowX: 0.4, glowY: 0.4, glowStrength: 0.45, glow: TEAL_DEEP }) },
-  // Light ambient wash for the (light) testimonials section.
-  {
-    name: 'ambient',
-    w: 1280,
-    h: 720,
-    v: {
-      seed: 55,
-      top: PAPER,
-      base: [233, 240, 238],
-      glow: TEAL,
-      glowX: 0.5,
-      glowY: 0.4,
-      glowStrength: 0.45,
-      glowMix: 0.28,
-      edge: [223, 232, 230],
-      edgeStrength: 0.5,
-    },
-  },
-  // Destinations / packages — navy fields, distinct teal glow signatures.
-  { name: 'maldives-mauritius', w: 1200, h: 1500, v: media({ seed: 101, glowX: 0.6, glowY: 0.7, washAmount: 0.22 }) },
-  { name: 'vietnam-cambodia', w: 1500, h: 1000, v: media({ seed: 102, glowX: 0.75, glowY: 0.3 }) },
-  { name: 'malaysia', w: 1200, h: 1200, v: media({ seed: 103, glowX: 0.32, glowY: 0.42, glow: TEAL_DEEP }) },
-  { name: 'singapore', w: 1200, h: 1200, v: media({ seed: 104, glowX: 0.7, glowY: 0.55 }) },
-  { name: 'dubai-uae', w: 1200, h: 1500, v: media({ seed: 105, glowX: 0.5, glowY: 0.26, glowStrength: 0.72, washAmount: 0.2 }) },
-  { name: 'sri-lanka', w: 1500, h: 1000, v: media({ seed: 106, glowX: 0.3, glowY: 0.66, glow: TEAL_DEEP }) },
+  { name: 'hero', w: 1440, h: 810, v: { seed: 7, horizon: 0.6, sunX: 0.72, sunStrength: 0.95, reflection: 0.7 } },
+  { name: 'scrub', w: 1280, h: 720, v: { seed: 21, horizon: 0.55, sunX: 0.32, sunStrength: 0.8 } },
+  { name: 'masked', w: 1440, h: 648, v: { seed: 33, horizon: 0.5, sunX: 0.5, sunStrength: 1.0, haze: 0.8 } },
+  // Maldives — low horizon, wide lagoon, bright reflection.
+  { name: 'maldives-mauritius', w: 1200, h: 1500, v: { seed: 101, horizon: 0.64, sunX: 0.6, sunStrength: 0.95, reflection: 0.85 } },
+  // Halong / Angkor — misty, layered haze.
+  { name: 'vietnam-cambodia', w: 1500, h: 1000, v: { seed: 102, horizon: 0.62, sunX: 0.76, haze: 0.9, skyHorizon: TEAL_DEEP } },
+  // Malaysia — cooler, deep teal.
+  { name: 'malaysia', w: 1200, h: 1200, v: { seed: 103, horizon: 0.58, sunX: 0.38, skyHorizon: TEAL_DEEP, sunStrength: 0.75 } },
+  // Singapore — brighter city glow.
+  { name: 'singapore', w: 1200, h: 1200, v: { seed: 104, horizon: 0.62, sunX: 0.7, sunStrength: 1.0 } },
+  // Dubai — high sky, warm bright dusk.
+  { name: 'dubai-uae', w: 1200, h: 1500, v: { seed: 105, horizon: 0.5, sunX: 0.5, sunStrength: 1.0, sunColor: [230, 240, 232], haze: 0.7 } },
+  // Sri Lanka — tea hills, deep teal, soft haze.
+  { name: 'sri-lanka', w: 1500, h: 1000, v: { seed: 106, horizon: 0.66, sunX: 0.3, skyHorizon: TEAL_DEEP, haze: 0.85 } },
 ];
 
 for (const p of posters) {
-  const png = paint(p.w, p.h, p.v);
+  const png = scene(p.w, p.h, p.v);
   writeFileSync(join(VIDEOS, `${p.name}.png`), png);
   console.log(`poster  ${p.name}.png  ${p.w}x${p.h}  ${(png.length / 1024).toFixed(1)}KB`);
 }
 
-// ---- OG cards (1200x630) — premium dark brand cards ------------------------
+// Ambient (light section) — a pale high-key wash, barely-there.
+{
+  const png = scene(1280, 720, {
+    seed: 55,
+    horizon: 0.55,
+    sunX: 0.5,
+    sunStrength: 0.5,
+    sunColor: PAPER,
+    skyTop: [225, 233, 230],
+    skyHorizon: BRIGHT,
+    ground: BRIGHT,
+    groundBottom: [223, 232, 229],
+    haze: 0.3,
+    reflection: 0.2,
+    vignette: 0.4,
+  });
+  writeFileSync(join(VIDEOS, 'ambient.png'), png);
+  console.log(`poster  ambient.png  1280x720  ${(png.length / 1024).toFixed(1)}KB`);
+}
+// Ambient (dark variant) — optional.
+{
+  const png = scene(1280, 720, { seed: 66, horizon: 0.5, sunX: 0.4, sunStrength: 0.55, skyHorizon: TEAL_DEEP, reflection: 0.4 });
+  writeFileSync(join(VIDEOS, 'ambient-deep.png'), png);
+  console.log(`poster  ambient-deep.png  1280x720  ${(png.length / 1024).toFixed(1)}KB`);
+}
+
+// ---- OG cards (1200x630) — hero-like scene ---------------------------------
 const ogNames = [
   'default',
   'maldives-mauritius',
@@ -200,7 +327,7 @@ const ogNames = [
   'sri-lanka',
 ];
 ogNames.forEach((name, idx) => {
-  const png = paint(1200, 630, media({ seed: 200 + idx, glowX: 0.78, glowY: 0.34, glowStrength: 0.55 }));
+  const png = scene(1200, 630, { seed: 200 + idx, horizon: 0.6, sunX: 0.74, sunStrength: 0.9, reflection: 0.6 });
   writeFileSync(join(OG, `${name}.png`), png);
   console.log(`og      ${name}.png  1200x630  ${(png.length / 1024).toFixed(1)}KB`);
 });
