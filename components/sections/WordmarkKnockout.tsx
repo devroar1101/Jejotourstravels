@@ -1,5 +1,7 @@
 'use client';
 
+import { posterPath } from '@/lib/media';
+
 /**
  * Treatment 4 (variant) — a large serif wordmark with the footage knocked out
  * of it via background-clip: text. Uses the poster as the fill so it reads even
@@ -22,7 +24,7 @@ export default function WordmarkKnockout({
       <div className="mx-auto max-w-editorial">
         <span
           className="video-knockout block text-center font-display font-semibold leading-[0.82]"
-          style={{ backgroundImage: `url(/videos/${media}.png)` }}
+          style={{ backgroundImage: `url(${posterPath(media)})` }}
         >
           {word}
         </span>

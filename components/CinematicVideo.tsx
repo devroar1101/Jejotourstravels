@@ -9,6 +9,7 @@ import {
   useState,
 } from 'react';
 import { useConstrainedNetwork, useReducedMotion } from '@/lib/hooks';
+import { posterPath } from '@/lib/media';
 
 export type VideoMode = 'hero' | 'scrub' | 'hover' | 'masked' | 'ambient';
 
@@ -47,7 +48,7 @@ export interface CinematicVideoHandle {
   poster: string;
 }
 
-const poster = (name: string) => `/videos/${name}.png`;
+const poster = (name: string) => posterPath(name);
 
 /**
  * One component, five treatments. Poster-first: the poster paints immediately

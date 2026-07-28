@@ -100,7 +100,7 @@ export default function ScrubMoment() {
           muted
           playsInline
           preload="none"
-          poster="/videos/scrub.png"
+          poster="/videos/scrub.jpg"
           aria-label="A journey coming together, scene by scene"
         >
           <source src="/videos/scrub.webm" type="video/webm" />
@@ -115,7 +115,7 @@ export default function ScrubMoment() {
           className="absolute inset-0 h-full w-full bg-cover bg-center"
           style={{
             backgroundImage:
-              'image-set(url(/videos/scrub-sprite.webp) 1x), url(/videos/scrub.png)',
+              'image-set(url(/videos/scrub-sprite.webp) 1x), url(/videos/scrub.jpg)',
             backgroundSize: '4800% 100%',
           }}
           aria-hidden
@@ -125,7 +125,7 @@ export default function ScrubMoment() {
       {/* Poster underlay for reduced motion */}
       {reduced && (
         <img
-          src="/videos/scrub.png"
+          src="/videos/scrub.jpg"
           alt="A journey coming together"
           className="absolute inset-0 h-full w-full object-cover"
           width={1280}
