@@ -93,15 +93,30 @@ export default function SignatureJourneys() {
             onMouseLeave={() => setHovered(null)}
             className="group relative flex h-[62vh] w-[82vw] shrink-0 snap-center flex-col justify-end overflow-hidden md:w-[42vw] lg:w-[34vw]"
           >
-            <CinematicVideo
-              name={p.media}
-              label={`Scenes from the ${p.name} journey`}
-              width={1200}
-              height={1400}
-              mode="hover"
-              active={hovered === p.slug}
-              scrim={0.7}
-              className="absolute inset-0 h-full"
+            <div
+              className="absolute inset-0 transition-transform duration-[1200ms] ease-editorial will-change-transform"
+              style={{ transform: hovered === p.slug ? 'scale(1.06)' : 'scale(1)' }}
+            >
+              <CinematicVideo
+                name={p.media}
+                label={`Scenes from the ${p.name} journey`}
+                width={1200}
+                height={1400}
+                mode="hover"
+                active={hovered === p.slug}
+                scrim={0.7}
+                className="absolute inset-0 h-full"
+              />
+            </div>
+            {/* Teal inset ring on hover. */}
+            <div
+              className="pointer-events-none absolute inset-0 transition-all duration-500"
+              style={{
+                boxShadow:
+                  hovered === p.slug
+                    ? 'inset 0 0 0 2px rgba(20,163,160,0.7)'
+                    : 'inset 0 0 0 0 transparent',
+              }}
             />
             <div className="relative z-10 p-7">
               <div className="mb-4 flex items-center justify-between">

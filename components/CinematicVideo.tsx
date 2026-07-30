@@ -41,6 +41,11 @@ export interface CinematicVideoProps {
   manual?: boolean;
   /** Root margin for the lazy-mount observer. */
   rootMargin?: string;
+  /**
+   * Optional playlist of video basenames to play in sequence, looping back to
+   * the first when the last ends. When set, overrides the single `name` clip.
+   */
+  clips?: string[];
 }
 
 export interface CinematicVideoHandle {
@@ -71,6 +76,7 @@ const CinematicVideo = forwardRef<CinematicVideoHandle, CinematicVideoProps>(
       onCanPlay,
       manual = false,
       rootMargin = '200px',
+      clips,
     },
     ref,
   ) {
@@ -80,6 +86,10 @@ const CinematicVideo = forwardRef<CinematicVideoHandle, CinematicVideoProps>(
     const videoRef = useRef<HTMLVideoElement>(null);
     const [inView, setInView] = useState(false);
     const [canPlay, setCanPlay] = useState(false);
+    const [clipIndex, setClipIndex] = useState(0);
+
+    const playlist = clips && clips.length > 0 ? clips : null;
+    const isPlaylist = playlist !== null;
 
     // Hero on a constrained network shows the poster only.
     const posterOnly = reduced || (mode === 'hero' && constrained);
@@ -108,10 +118,24 @@ const CinematicVideo = forwardRef<CinematicVideoHandle, CinematicVideoProps>(
       return () => io.disconnect();
     }, [rootMargin]);
 
-    // Play / pause driven by mode + active + manual.
+    // Playlist: set the current clip's src, play, and advance on `ended`,
+    // looping back to the first. Overrides the single-clip <source> path.
+    useEffect(() => {
+      const v = videoRef.current;
+      if (!v || !shouldMount || !playlist) return;
+      v.src = `/videos/${playlist[clipIndex]}.mp4`;
+      v.load();
+      void v.play().catch(() => undefined);
+      const onEnded = () => setClipIndex((i) => (i + 1) % playlist.length);
+      v.addEventListener('ended', onEnded);
+      return () => v.removeEventListener('ended', onEnded);
+    }, [shouldMount, clipIndex, playlist]);
+
+    // Play / pause driven by mode + active + manual (single-clip path).
     useEffect(() => {
       const v = videoRef.current;
       if (!v || !shouldMount || !canPlay) return;
+      if (isPlaylist) return; // playlist effect owns playback
       if (manual) return; // parent scrubs currentTime
       if (mode === 'hover') {
         if (active) {
@@ -164,8 +188,8 @@ const CinematicVideo = forwardRef<CinematicVideoHandle, CinematicVideoProps>(
             height={height}
             muted
             playsInline
-            loop={!manual}
-            preload="none"
+            loop={!manual && !isPlaylist}
+            preload={isPlaylist ? 'auto' : 'none'}
             poster={poster(name)}
             aria-label={label || undefined}
             aria-hidden={label ? undefined : true}
@@ -174,8 +198,12 @@ const CinematicVideo = forwardRef<CinematicVideoHandle, CinematicVideoProps>(
               onCanPlay?.();
             }}
           >
-            <source src={`/videos/${name}.webm`} type="video/webm" />
-            <source src={`/videos/${name}.mp4`} type="video/mp4" />
+            {!isPlaylist && (
+              <>
+                <source src={`/videos/${name}.webm`} type="video/webm" />
+                <source src={`/videos/${name}.mp4`} type="video/mp4" />
+              </>
+            )}
           </video>
         )}
 

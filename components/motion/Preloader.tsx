@@ -75,11 +75,11 @@ export default function Preloader() {
           : 'transform 0.7s cubic-bezier(0.76,0,0.24,1)',
       }}
     >
-      {/* Splash video */}
+      {/* Splash video — the clip carries the logo, so no overlay text. */}
       {!reduced && (
         <video
           ref={videoRef}
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-contain"
           muted
           playsInline
           preload="auto"
@@ -88,37 +88,6 @@ export default function Preloader() {
           <source src="/videos/splash.mp4" type="video/mp4" />
         </video>
       )}
-
-      {/* Ink scrim for wordmark legibility */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            'radial-gradient(120% 120% at 50% 50%, rgba(14,31,58,0.25) 0%, rgba(14,31,58,0.7) 100%)',
-        }}
-      />
-
-      {/* Brand */}
-      <div className="relative grid h-full place-items-center">
-        <div className="text-center">
-          <span
-            className="block font-display font-semibold leading-none text-paper"
-            style={{ fontSize: 'clamp(2.5rem, 9vw, 6rem)', letterSpacing: '-0.02em' }}
-          >
-            JEJO
-          </span>
-          <span
-            className="mt-4 block font-body text-paper-dim"
-            style={{
-              fontSize: '0.72rem',
-              letterSpacing: '0.34em',
-              textTransform: 'uppercase',
-            }}
-          >
-            Tours &amp; Travels
-          </span>
-        </div>
-      </div>
     </div>
   );
 }

@@ -105,34 +105,82 @@ function DestinationTile({
     return () => io.disconnect();
   }, [touch, media, onActivate, onDeactivate]);
 
+  // `active` is true on desktop hover and when 60% in view on mobile — drive
+  // every reveal off it so both behave identically.
+  const on = active;
+
   return (
-    <Reveal
-      as="div"
-      className={`group relative overflow-hidden ${spanCls}`}
-    >
+    <Reveal as="div" className={`group relative overflow-hidden ${spanCls}`}>
       <div
         ref={ref}
-        className="relative h-full w-full"
+        className="relative h-full w-full cursor-pointer"
         onMouseEnter={touch ? undefined : () => onActivate(media)}
         onMouseLeave={touch ? undefined : () => onDeactivate(media)}
         data-cursor="VIEW"
       >
-        <CinematicVideo
-          name={media}
-          label={`${name} — a place JEJO arranges journeys to`}
-          width={1200}
-          height={1400}
-          mode="hover"
-          active={active}
-          scrim={0.5}
-          className="absolute inset-0 h-full"
+        {/* Media with a slow zoom on activate. */}
+        <div
+          className="absolute inset-0 transition-transform duration-[1200ms] ease-editorial will-change-transform"
+          style={{ transform: on ? 'scale(1.06)' : 'scale(1)' }}
+        >
+          <CinematicVideo
+            name={media}
+            label={`${name} — a place JEJO arranges journeys to`}
+            width={1200}
+            height={1400}
+            mode="hover"
+            active={active}
+            scrim={0.35}
+            className="absolute inset-0 h-full"
+          />
+        </div>
+
+        {/* Always-on bottom gradient — keeps the name readable on any image. */}
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-3/5"
+          style={{
+            background:
+              'linear-gradient(to top, rgba(11,22,42,0.9) 0%, rgba(11,22,42,0.5) 35%, rgba(11,22,42,0) 100%)',
+          }}
         />
+        {/* Teal wash + inset ring on activate. */}
+        <div
+          className="pointer-events-none absolute inset-0 transition-all duration-500"
+          style={{
+            backgroundColor: on ? 'rgba(20,163,160,0.16)' : 'transparent',
+            boxShadow: on ? 'inset 0 0 0 2px rgba(20,163,160,0.7)' : 'inset 0 0 0 0 transparent',
+          }}
+        />
+
+        {/* Content */}
         <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-end p-6">
-          <h3 className="font-display text-3xl text-paper md:text-4xl">{name}</h3>
-          {/* Line revealed on hover / in-view. */}
+          <span
+            className="eyebrow mb-2 transition-all duration-500"
+            style={{
+              color: 'var(--teal)',
+              opacity: on ? 1 : 0,
+              transform: on ? 'translateY(0)' : 'translateY(8px)',
+            }}
+          >
+            Explore
+          </span>
+          <h3
+            className="font-display text-3xl text-paper md:text-4xl"
+            style={{ textShadow: '0 2px 24px rgba(11,22,42,0.7)' }}
+          >
+            {name}
+          </h3>
+          {/* Teal accent line grows on activate. */}
+          <span
+            className="mt-3 block h-px w-12 origin-left bg-teal transition-transform duration-500"
+            style={{ transform: on ? 'scaleX(1)' : 'scaleX(0)' }}
+          />
           <p
-            className="mt-2 max-w-xs font-body text-sm text-paper-dim transition-all duration-500 ease-editorial md:translate-y-3 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"
-            style={touch && active ? { opacity: 1, transform: 'none' } : undefined}
+            className="mt-3 max-w-xs font-body text-sm text-paper-dim transition-all duration-500 ease-editorial"
+            style={{
+              opacity: on ? 1 : 0,
+              transform: on ? 'translateY(0)' : 'translateY(12px)',
+            }}
           >
             {line}
           </p>
