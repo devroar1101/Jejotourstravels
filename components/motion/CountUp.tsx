@@ -30,25 +30,44 @@ export default function CountUp({
     }
     const el = ref.current;
     if (!el) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting && !startedRef.current) {
-          startedRef.current = true;
-          const start = performance.now();
-          const step = (now: number) => {
-            const t = Math.min(1, (now - start) / duration);
-            const eased = 1 - Math.pow(1 - t, 3);
-            setDisplay(Math.round(eased * value));
-            if (t < 1) requestAnimationFrame(step);
-          };
-          requestAnimationFrame(step);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.4 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
+
+    const run = () => {
+      if (startedRef.current) return;
+      startedRef.current = true;
+      const start = performance.now();
+      const step = (now: number) => {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        setDisplay(Math.round(eased * value));
+        if (t < 1) requestAnimationFrame(step);
+        else setDisplay(value); // land exactly on the value
+      };
+      requestAnimationFrame(step);
+    };
+
+    // Poll the element's visual box — reliable even inside the GSAP-pinned,
+    // transformed Signature Journeys rail where IntersectionObserver misfires.
+    const id = window.setInterval(() => {
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      if (r.width > 0 && r.top < vh * 0.9 && r.bottom > vh * 0.08) {
+        run();
+        window.clearInterval(id);
+      }
+    }, 120);
+    // Safety net: never leave the figure stuck at 0.
+    const fb = window.setTimeout(() => {
+      if (!startedRef.current) {
+        startedRef.current = true;
+        setDisplay(value);
+      }
+      window.clearInterval(id);
+    }, 6000);
+
+    return () => {
+      window.clearInterval(id);
+      window.clearTimeout(fb);
+    };
   }, [reduced, value, duration]);
 
   return (

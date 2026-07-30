@@ -49,7 +49,8 @@ export default function Hero() {
         <div className={reduced ? '' : 'hero-drift h-full w-full'}>
           <CinematicVideo
             name="hero"
-            label="Aerial footage drifting slowly over open water at dawn"
+            clips={['hero', 'dubai-uae']}
+            label="Cinematic footage of the destinations JEJO arranges"
             width={1600}
             height={900}
             mode="hero"
