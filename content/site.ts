@@ -3,7 +3,7 @@ export const site = {
   shortName: 'JEJO',
   tagline: 'The Art of the Journey',
   description:
-    'An international tour operator based in Tamil Nadu, arranging considered journeys across the Maldives, Southeast Asia, the Gulf and the Indian Ocean.',
+    'A full-service travel company in Tamil Nadu offering complete travel support under one roof — passports, international visas, flights, hotels, tour packages, insurance and more — planned with care, honesty and attention to detail.',
   email: 'jejo.tourism10@gmail.com',
   // Displayed number.
   phoneDisplay: '+91 86105 80975',
