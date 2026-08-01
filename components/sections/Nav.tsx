@@ -5,7 +5,7 @@ import Magnetic from '@/components/motion/Magnetic';
 import EnquiryCTA from '@/components/enquiry/EnquiryCTA';
 
 const LINKS = [
-  ['Philosophy', '#philosophy'],
+  ['About', '#philosophy'],
   ['Journeys', '#journeys'],
   ['Destinations', '#destinations'],
   ['Services', '#services'],
