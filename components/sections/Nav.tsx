@@ -30,12 +30,17 @@ export default function Nav() {
       <div className="mx-auto flex max-w-editorial items-center justify-between px-6 py-5 md:px-12">
         <a
           href="#top"
-          className={`font-display text-xl font-semibold tracking-tight transition-colors ${
+          className={`flex flex-col leading-none transition-colors ${
             solid ? 'text-navy' : 'text-paper'
           }`}
           aria-label="JEJO Tours and Travels — home"
         >
-          JEJO
+          <span className="font-display text-xl font-semibold leading-none tracking-tight">
+            JEJO
+          </span>
+          <span className="mt-1 font-body text-[0.55rem] uppercase leading-none tracking-[0.28em] opacity-80">
+            Tours &amp; Travels
+          </span>
         </a>
 
         <nav className="hidden items-center gap-8 md:flex" aria-label="Primary">

@@ -23,7 +23,7 @@ export default function WordmarkKnockout({
     >
       <div className="mx-auto max-w-editorial">
         <span
-          className="video-knockout block text-center font-display font-semibold leading-[0.82]"
+          className="video-knockout block py-[0.05em] text-center font-display font-semibold leading-[1]"
           style={{ backgroundImage: `url(${posterPath(media)})` }}
         >
           {word}
