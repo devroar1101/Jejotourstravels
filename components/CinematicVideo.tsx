@@ -91,8 +91,11 @@ const CinematicVideo = forwardRef<CinematicVideoHandle, CinematicVideoProps>(
     const playlist = clips && clips.length > 0 ? clips : null;
     const isPlaylist = playlist !== null;
 
-    // Hero on a constrained network shows the poster only.
-    const posterOnly = reduced || (mode === 'hero' && constrained);
+    // Suppress video only under reduced motion. A stale/incorrect
+    // effectiveType reading on mobile must never hide the hero, so the
+    // constrained-network signal no longer gates playback.
+    void constrained;
+    const posterOnly = reduced;
     const shouldMount = inView && !posterOnly;
 
     useImperativeHandle(ref, () => ({
@@ -132,9 +135,12 @@ const CinematicVideo = forwardRef<CinematicVideoHandle, CinematicVideoProps>(
     }, [shouldMount, clipIndex, playlist]);
 
     // Play / pause driven by mode + active + manual (single-clip path).
+    // NOTE: play() is NOT gated on canPlay — with preload="none" the browser
+    // won't load until play() is called, so gating on canPlay would deadlock
+    // (no load -> no canplay -> no play). Calling play() kicks off the load.
     useEffect(() => {
       const v = videoRef.current;
-      if (!v || !shouldMount || !canPlay) return;
+      if (!v || !shouldMount) return;
       if (isPlaylist) return; // playlist effect owns playback
       if (manual) return; // parent scrubs currentTime
       if (mode === 'hover') {
@@ -146,8 +152,8 @@ const CinematicVideo = forwardRef<CinematicVideoHandle, CinematicVideoProps>(
         }
         return;
       }
-      void v.play().catch(() => undefined);
-    }, [shouldMount, canPlay, active, mode, manual]);
+      void v.play().catch(() => undefined); // autoplay modes: hero / ambient / masked
+    }, [shouldMount, active, mode, manual, isPlaylist]);
 
     const aspect = useMemo(
       () => ({ aspectRatio: `${width} / ${height}` }),
@@ -157,6 +163,10 @@ const CinematicVideo = forwardRef<CinematicVideoHandle, CinematicVideoProps>(
     // Crossfade posture: hover fades in on active; everything else shows video once ready.
     const videoVisible =
       canPlay && (mode === 'hover' ? active : true);
+
+    // Autoplay modes (hero, ambient, masked) get the native autoplay attribute
+    // as a belt-and-suspenders alongside the JS play() call.
+    const autoplay = !manual && mode !== 'hover';
 
     return (
       <div
@@ -188,8 +198,9 @@ const CinematicVideo = forwardRef<CinematicVideoHandle, CinematicVideoProps>(
             height={height}
             muted
             playsInline
+            autoPlay={autoplay}
             loop={!manual && !isPlaylist}
-            preload={isPlaylist ? 'auto' : 'none'}
+            preload={isPlaylist || autoplay || manual ? 'auto' : 'metadata'}
             poster={poster(name)}
             aria-label={label || undefined}
             aria-hidden={label ? undefined : true}
