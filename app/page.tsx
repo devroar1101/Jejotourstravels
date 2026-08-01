@@ -2,6 +2,7 @@ import Nav from '@/components/sections/Nav';
 import Hero from '@/components/sections/Hero';
 import Philosophy from '@/components/sections/Philosophy';
 import MaskedBand from '@/components/sections/MaskedBand';
+import Domestic from '@/components/sections/Domestic';
 import SignatureJourneys from '@/components/sections/SignatureJourneys';
 import Destinations from '@/components/sections/Destinations';
 import ScrubMoment from '@/components/sections/ScrubMoment';
@@ -19,6 +20,7 @@ export default function Page() {
         <Hero />
         <Philosophy />
         <MaskedBand word="Journeys" media="masked" />
+        <Domestic />
         <SignatureJourneys />
         <Destinations />
         <ScrubMoment />

@@ -282,6 +282,13 @@ const posters = [
   { name: 'dubai-uae', w: 1200, h: 1500, v: { seed: 105, horizon: 0.5, sunX: 0.5, sunStrength: 1.0, sunColor: [230, 240, 232], haze: 0.7 } },
   // Sri Lanka — tea hills, deep teal, soft haze.
   { name: 'sri-lanka', w: 1500, h: 1000, v: { seed: 106, horizon: 0.66, sunX: 0.3, skyHorizon: TEAL_DEEP, haze: 0.85 } },
+  // Domestic (India) — portrait cards, varied glow signatures.
+  { name: 'kerala', w: 1000, h: 1333, v: { seed: 301, horizon: 0.64, sunX: 0.4, skyHorizon: TEAL_DEEP, haze: 0.85 } },
+  { name: 'kashmir', w: 1000, h: 1333, v: { seed: 302, horizon: 0.52, sunX: 0.6, sunColor: [225, 236, 232] } },
+  { name: 'goa', w: 1000, h: 1333, v: { seed: 303, horizon: 0.66, sunX: 0.72, sunStrength: 1.0 } },
+  { name: 'rajasthan', w: 1000, h: 1333, v: { seed: 304, horizon: 0.5, sunX: 0.5, sunStrength: 1.0, sunColor: [232, 240, 230], haze: 0.7 } },
+  { name: 'andaman', w: 1000, h: 1333, v: { seed: 305, horizon: 0.66, sunX: 0.58, reflection: 0.85 } },
+  { name: 'himachal', w: 1000, h: 1333, v: { seed: 306, horizon: 0.5, sunX: 0.3, skyHorizon: TEAL_DEEP, haze: 0.9 } },
 ];
 
 for (const p of posters) {
