@@ -70,10 +70,12 @@ export default function Footer() {
         </div>
 
         {/* Oversized wordmark */}
-        <div className="mt-20 md:mt-32">
+        <div className="mt-20 overflow-visible md:mt-32">
           <Magnetic strength={0.08}>
-            <h2 className="select-none font-display font-semibold leading-[0.8] tracking-tighter text-navy">
-              <span className="block text-[22vw] md:text-[19vw]">JEJO</span>
+            <h2 className="select-none py-[0.08em] font-display font-semibold leading-[1.05] tracking-tight text-navy">
+              <span className="block text-[20vw] leading-[1.05] md:text-[18vw]">
+                JEJO
+              </span>
             </h2>
           </Magnetic>
         </div>
