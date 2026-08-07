@@ -143,7 +143,7 @@ function DomesticCard({
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
-  // Mobile: play when the card is 60% in view.
+  // Mobile: play the film when the card is 60% in view (no hover on touch).
   useEffect(() => {
     if (!touch) return;
     const el = ref.current;
