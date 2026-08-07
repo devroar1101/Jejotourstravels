@@ -7,10 +7,15 @@ import CinematicVideo from '@/components/CinematicVideo';
 import EnquiryCTA from '@/components/enquiry/EnquiryCTA';
 import { domestic } from '@/content/domestic';
 import { useIsTouch, useReducedMotion } from '@/lib/hooks';
+import { posterPath } from '@/lib/media';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
+
+// Slots that ship with real footage. The rest are poster-only, so we never
+// mount a <video> for them (which would 404 on a missing .mp4).
+const WITH_VIDEO = new Set(['kerala', 'kashmir', 'goa', 'andaman']);
 
 export default function Domestic() {
   const reduced = useReducedMotion();
@@ -142,10 +147,11 @@ function DomesticCard({
   onDeactivate: (n: string) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const hasVideo = WITH_VIDEO.has(media);
 
   // Mobile: play the film when the card is 60% in view (no hover on touch).
   useEffect(() => {
-    if (!touch) return;
+    if (!touch || !hasVideo) return;
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
@@ -157,7 +163,7 @@ function DomesticCard({
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [touch, media, onActivate, onDeactivate]);
+  }, [touch, hasVideo, media, onActivate, onDeactivate]);
 
   return (
     <article
@@ -171,16 +177,29 @@ function DomesticCard({
         className="absolute inset-0 transition-transform duration-[1200ms] ease-editorial will-change-transform"
         style={{ transform: active ? 'scale(1.06)' : 'scale(1)' }}
       >
-        <CinematicVideo
-          name={media}
-          label={`${name} — a domestic journey JEJO arranges within India`}
-          width={1000}
-          height={1333}
-          mode="hover"
-          active={active}
-          scrim={0.35}
-          className="absolute inset-0 h-full"
-        />
+        {hasVideo ? (
+          <CinematicVideo
+            name={media}
+            label={`${name} — a domestic journey JEJO arranges within India`}
+            width={1000}
+            height={1333}
+            mode="hover"
+            active={active}
+            scrim={0.35}
+            className="absolute inset-0 h-full"
+          />
+        ) : (
+          // No footage yet — poster only, so no <video> and no 404.
+          <img
+            src={posterPath(media)}
+            alt={`${name} — a domestic journey JEJO arranges within India`}
+            width={1000}
+            height={1333}
+            className="absolute inset-0 h-full w-full object-cover"
+            loading="lazy"
+            decoding="async"
+          />
+        )}
       </div>
 
       {/* Bottom gradient for legibility. */}

@@ -210,10 +210,7 @@ const CinematicVideo = forwardRef<CinematicVideoHandle, CinematicVideoProps>(
             }}
           >
             {!isPlaylist && (
-              <>
-                <source src={`/videos/${name}.webm`} type="video/webm" />
-                <source src={`/videos/${name}.mp4`} type="video/mp4" />
-              </>
+              <source src={`/videos/${name}.mp4`} type="video/mp4" />
             )}
           </video>
         )}
