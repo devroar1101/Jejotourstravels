@@ -12,10 +12,6 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-// Slots that ship with real footage. These autoplay-loop so the film is always
-// visible; the rest stay on their poster until a clip is supplied.
-const WITH_VIDEO = new Set(['kerala', 'kashmir', 'goa', 'andaman']);
-
 export default function Domestic() {
   const reduced = useReducedMotion();
   const touch = useIsTouch();
@@ -146,9 +142,8 @@ function DomesticCard({
   onDeactivate: (n: string) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const hasVideo = WITH_VIDEO.has(media);
 
-  // Mobile: mark the card active (zoom + ring) when it is 60% in view.
+  // Mobile: play the film when the card is 60% in view (no hover on touch).
   useEffect(() => {
     if (!touch) return;
     const el = ref.current;
@@ -181,7 +176,7 @@ function DomesticCard({
           label={`${name} — a domestic journey JEJO arranges within India`}
           width={1000}
           height={1333}
-          mode={hasVideo ? 'ambient' : 'hover'}
+          mode="hover"
           active={active}
           scrim={0.35}
           className="absolute inset-0 h-full"
