@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import CinematicVideo from '@/components/CinematicVideo';
@@ -101,7 +102,8 @@ export default function Domestic() {
       >
         {domestic.map((d) => (
           <DomesticCard
-            key={d.media}
+            key={d.slug}
+            slug={d.slug}
             name={d.name}
             line={d.line}
             media={d.media}
@@ -130,6 +132,7 @@ export default function Domestic() {
 }
 
 function DomesticCard({
+  slug,
   name,
   line,
   media,
@@ -138,6 +141,7 @@ function DomesticCard({
   onActivate,
   onDeactivate,
 }: {
+  slug: string;
   name: string;
   line: string;
   media: string;
@@ -146,7 +150,7 @@ function DomesticCard({
   onActivate: (n: string) => void;
   onDeactivate: (n: string) => void;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLAnchorElement>(null);
   const hasVideo = WITH_VIDEO.has(media);
 
   // Mobile: play the film when the card is 60% in view (no hover on touch).
@@ -166,12 +170,14 @@ function DomesticCard({
   }, [touch, hasVideo, media, onActivate, onDeactivate]);
 
   return (
-    <article
+    <Link
+      href={`/destinations/${slug}/`}
       ref={ref}
       onMouseEnter={touch ? undefined : () => onActivate(media)}
       onMouseLeave={touch ? undefined : () => onDeactivate(media)}
       data-cursor="VIEW"
-      className="group relative h-[62vh] w-[74vw] shrink-0 snap-center overflow-hidden sm:w-[52vw] md:w-[34vw] lg:w-[26vw]"
+      aria-label={`${name} — view details`}
+      className="group relative block h-[62vh] w-[74vw] shrink-0 snap-center overflow-hidden sm:w-[52vw] md:w-[34vw] lg:w-[26vw]"
     >
       <div
         className="absolute inset-0 transition-transform duration-[1200ms] ease-editorial will-change-transform"
@@ -231,6 +237,6 @@ function DomesticCard({
         </h3>
         <p className="mt-2 max-w-xs font-body text-sm text-paper-dim">{line}</p>
       </div>
-    </article>
+    </Link>
   );
 }

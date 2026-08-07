@@ -30,14 +30,20 @@ export function buildJsonLd() {
     description: p.summary,
     brand: { '@type': 'Brand', name: site.name },
     image: `${site.url}/og/${p.slug}.png`,
-    offers: {
-      '@type': 'Offer',
-      price: p.price,
-      priceCurrency: 'INR',
-      availability: 'https://schema.org/InStock',
-      priceValidUntil: '2027-12-31',
-      url: `${site.url}/?enquire=${p.slug}`,
-    },
+    // Only advertise an Offer where we hold a real "from" price; routes we
+    // quote on request omit it rather than carry an invalid empty price.
+    ...(p.price
+      ? {
+          offers: {
+            '@type': 'Offer',
+            price: p.price,
+            priceCurrency: 'INR',
+            availability: 'https://schema.org/InStock',
+            priceValidUntil: '2027-12-31',
+            url: `${site.url}/?enquire=${p.slug}`,
+          },
+        }
+      : {}),
   }));
 
   return {

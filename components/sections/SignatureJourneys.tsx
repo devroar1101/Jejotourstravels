@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import CinematicVideo from '@/components/CinematicVideo';
@@ -126,23 +127,44 @@ export default function SignatureJourneys() {
                 </span>
               </div>
               <h3 className="font-display text-4xl leading-none text-paper md:text-5xl">
-                {p.name}
+                <Link
+                  href={`/destinations/${p.slug}/`}
+                  className="transition-colors hover:text-teal"
+                  data-cursor="VIEW"
+                >
+                  {p.name}
+                </Link>
               </h3>
               <p className="mt-4 max-w-sm font-body text-paper-dim">
                 {p.summary}
               </p>
               <div className="mt-6 flex items-center justify-between">
-                <p className="font-body text-sm text-paper-dim">
-                  from{' '}
-                  <CountUp
-                    value={p.price}
-                    className="font-display text-2xl text-teal"
-                  />
-                  <span className="ml-1">/ person</span>
-                </p>
-                <EnquiryCTA slug={p.slug} variant="text">
-                  Enquire
-                </EnquiryCTA>
+                {p.price ? (
+                  <p className="font-body text-sm text-paper-dim">
+                    from{' '}
+                    <CountUp
+                      value={p.price}
+                      className="font-display text-2xl text-teal"
+                    />
+                    <span className="ml-1">/ person</span>
+                  </p>
+                ) : (
+                  <p className="font-display text-lg text-teal">
+                    Price on request
+                  </p>
+                )}
+                <div className="flex items-center gap-5">
+                  <Link
+                    href={`/destinations/${p.slug}/`}
+                    className="link-underline font-body text-sm text-paper-dim hover:text-paper"
+                    data-cursor="VIEW"
+                  >
+                    Details
+                  </Link>
+                  <EnquiryCTA slug={p.slug} variant="text">
+                    Enquire
+                  </EnquiryCTA>
+                </div>
               </div>
             </div>
           </article>
