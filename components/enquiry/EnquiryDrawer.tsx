@@ -166,7 +166,7 @@ export default function EnquiryDrawer() {
                               update({
                                 destination: p.name,
                                 slug: p.slug,
-                                price: `${inr(p.price)} onwards`,
+                                price: p.price ? `${inr(p.price)} onwards` : '',
                               })
                             }
                           >

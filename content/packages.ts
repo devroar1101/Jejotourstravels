@@ -2,8 +2,11 @@ export interface Package {
   slug: string;
   name: string;
   region: string;
-  /** Price per person in INR, presented as "from". Never invent prices. */
-  price: number;
+  /**
+   * Price per person in INR, presented as "from". Never invent prices — leave
+   * undefined for routes we quote on request.
+   */
+  price?: number;
   duration: string;
   /** One editorial line. Short sentences. */
   summary: string;
@@ -113,6 +116,66 @@ export const packages: Package[] = [
       'Yala National Park',
     ],
     media: 'sri-lanka',
+  },
+  {
+    slug: 'thailand',
+    name: 'Thailand',
+    region: 'Southeast Asia',
+    duration: '5D / 4N',
+    summary:
+      'Bangkok temples and markets, then the islands and beaches of the Andaman coast.',
+    highlights: [
+      'Bangkok Grand Palace',
+      'Pattaya and Coral Island',
+      'Phuket beaches',
+      'Phi Phi and Krabi',
+    ],
+    media: 'thailand',
+  },
+  {
+    slug: 'indonesia',
+    name: 'Indonesia · Bali',
+    region: 'Southeast Asia',
+    duration: '6D / 5N',
+    summary:
+      'Bali across a single route — Ubud rice terraces, temple headlands and the southern beaches.',
+    highlights: [
+      'Ubud and the rice terraces',
+      'Uluwatu temple',
+      'Nusa Penida day trip',
+      'Seminyak and Kuta',
+    ],
+    media: 'indonesia',
+  },
+  {
+    slug: 'almaty',
+    name: 'Almaty',
+    region: 'Kazakhstan',
+    duration: '5D / 4N',
+    summary:
+      'Central Asia at the foot of the Tien Shan — cable cars, alpine lakes and canyon country.',
+    highlights: [
+      'Shymbulak and Medeu',
+      'Big Almaty Lake',
+      'Charyn Canyon',
+      'Kok Tobe hill',
+    ],
+    media: 'almaty',
+  },
+  {
+    slug: 'baku',
+    name: 'Baku',
+    region: 'Azerbaijan',
+    duration: '5D / 4N',
+    summary:
+      'Where the Caspian meets old and new — a walled old city, modern towers and desert petroglyphs.',
+    highlights: [
+      'Icherisheher old city',
+      'Flame Towers',
+      'Gobustan petroglyphs',
+      'Absheron mud volcanoes',
+    ],
+    media: 'baku',
   },
 ];
 

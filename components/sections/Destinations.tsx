@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import CinematicVideo from '@/components/CinematicVideo';
 import { Reveal } from '@/components/motion/Reveal';
 import { destinations } from '@/content/destinations';
@@ -86,7 +87,7 @@ function DestinationTile({
   onActivate: (n: string) => void;
   onDeactivate: (n: string) => void;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLAnchorElement>(null);
 
   // Mobile: activate when 60% in view.
   useEffect(() => {
@@ -111,9 +112,11 @@ function DestinationTile({
 
   return (
     <Reveal as="div" className={`group relative overflow-hidden ${spanCls}`}>
-      <div
+      <Link
+        href={`/destinations/${media}/`}
         ref={ref}
-        className="relative h-full w-full cursor-pointer"
+        aria-label={`${name} — view details`}
+        className="relative block h-full w-full cursor-pointer"
         onMouseEnter={touch ? undefined : () => onActivate(media)}
         onMouseLeave={touch ? undefined : () => onDeactivate(media)}
         data-cursor="VIEW"
@@ -185,7 +188,7 @@ function DestinationTile({
             {line}
           </p>
         </div>
-      </div>
+      </Link>
     </Reveal>
   );
 }

@@ -15,6 +15,13 @@ const JPG_SLOTS = new Set([
   'singapore',
   'dubai-uae',
   'sri-lanka',
+  // Domestic — real photos supplied by the client.
+  'kerala',
+  'kashmir',
+  'goa',
+  'rajasthan',
+  'andaman',
+  'himachal',
 ]);
 
 export function posterPath(name: string): string {

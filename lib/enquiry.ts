@@ -1,5 +1,6 @@
 import { site } from '@/content/site';
-import { inr, packageBySlug } from '@/content/packages';
+import { inr } from '@/content/packages';
+import { tripBySlug } from '@/content/catalog';
 
 /**
  * The entire enquiry payload as one typed object. The UI reads and writes
@@ -62,12 +63,12 @@ export const isValidIndianMobile = (raw: string): boolean =>
   /^[6-9]\d{9}$/.test(raw.replace(/\D/g, ''));
 
 export const draftFromSlug = (slug: string): Partial<EnquiryDraft> => {
-  const pkg = packageBySlug(slug);
-  if (!pkg) return {};
+  const trip = tripBySlug(slug);
+  if (!trip) return {};
   return {
-    destination: pkg.name,
-    slug: pkg.slug,
-    price: `${inr(pkg.price)} onwards`,
+    destination: trip.name,
+    slug: trip.slug,
+    price: trip.price ? `${inr(trip.price)} onwards` : '',
   };
 };
 

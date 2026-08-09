@@ -289,6 +289,17 @@ const posters = [
   { name: 'rajasthan', w: 1000, h: 1333, v: { seed: 304, horizon: 0.5, sunX: 0.5, sunStrength: 1.0, sunColor: [232, 240, 230], haze: 0.7 } },
   { name: 'andaman', w: 1000, h: 1333, v: { seed: 305, horizon: 0.66, sunX: 0.58, reflection: 0.85 } },
   { name: 'himachal', w: 1000, h: 1333, v: { seed: 306, horizon: 0.5, sunX: 0.3, skyHorizon: TEAL_DEEP, haze: 0.9 } },
+  // Domestic (India) — newer routes awaiting real photography.
+  { name: 'golden-triangle', w: 1000, h: 1333, v: { seed: 307, horizon: 0.5, sunX: 0.5, sunStrength: 1.0, sunColor: [232, 240, 230], haze: 0.7 } },
+  { name: 'uttarakhand', w: 1000, h: 1333, v: { seed: 308, horizon: 0.52, sunX: 0.34, skyHorizon: TEAL_DEEP, haze: 0.9 } },
+  { name: 'darjeeling', w: 1000, h: 1333, v: { seed: 309, horizon: 0.56, sunX: 0.66, haze: 0.85 } },
+  { name: 'ooty-kodaikanal', w: 1000, h: 1333, v: { seed: 310, horizon: 0.6, sunX: 0.42, skyHorizon: TEAL_DEEP, haze: 0.8 } },
+  { name: 'mysore-coorg', w: 1000, h: 1333, v: { seed: 311, horizon: 0.62, sunX: 0.7, sunStrength: 0.95 } },
+  // International — newer routes awaiting real photography (portrait cards).
+  { name: 'thailand', w: 1200, h: 1500, v: { seed: 401, horizon: 0.66, sunX: 0.6, sunStrength: 1.0, reflection: 0.8 } },
+  { name: 'indonesia', w: 1200, h: 1500, v: { seed: 402, horizon: 0.62, sunX: 0.7, skyHorizon: TEAL_DEEP, haze: 0.85 } },
+  { name: 'almaty', w: 1200, h: 1500, v: { seed: 403, horizon: 0.48, sunX: 0.36, skyHorizon: TEAL_DEEP, haze: 0.9, sunColor: [225, 236, 232] } },
+  { name: 'baku', w: 1200, h: 1500, v: { seed: 404, horizon: 0.5, sunX: 0.5, sunStrength: 1.0, sunColor: [232, 240, 230], haze: 0.7 } },
 ];
 
 for (const p of posters) {
@@ -332,6 +343,10 @@ const ogNames = [
   'singapore',
   'dubai-uae',
   'sri-lanka',
+  'thailand',
+  'indonesia',
+  'almaty',
+  'baku',
 ];
 ogNames.forEach((name, idx) => {
   const png = scene(1200, 630, { seed: 200 + idx, horizon: 0.6, sunX: 0.74, sunStrength: 0.9, reflection: 0.6 });
