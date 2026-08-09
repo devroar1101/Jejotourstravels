@@ -49,7 +49,7 @@ export default function Hero() {
         <div className={reduced ? '' : 'hero-drift h-full w-full'}>
           <CinematicVideo
             name="hero"
-            clips={['hero', 'dubai-uae']}
+            clips={['hero-burj', 'hero-kerala', 'hero-maldives']}
             label="Cinematic footage of the destinations JEJO arranges"
             width={1600}
             height={900}
