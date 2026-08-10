@@ -52,7 +52,9 @@ export default function Preloader() {
     v?.play().catch(() => undefined);
     v?.addEventListener('ended', finish, { once: true });
     v?.addEventListener('error', finish, { once: true });
-    const cap = window.setTimeout(finish, 6000);
+    // Safety cap sits just past the clip length so it plays through but a
+    // stalled/failed clip still releases the page.
+    const cap = window.setTimeout(finish, 11000);
 
     return () => {
       window.clearTimeout(cap);
