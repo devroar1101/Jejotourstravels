@@ -1,13 +1,14 @@
 import type { Config } from 'tailwindcss';
 
 /**
- * Coastal Editorial — a light theme drawn from the JEJO brand mark.
- * Warm paper, deep brand navy for content, brand teal as the single accent.
+ * Azure Premium — a light theme drawn from the JEJO brand mark.
+ * Crisp cool paper, near-black ink for content, royal blue as the single accent.
  * The default Tailwind palette is disabled; these tokens are the whole system.
+ * (Token names paper/navy/teal are kept for stability; only the values changed.)
  *
- *   paper  #F7F5F0  warm off-white surface (page background, text on dark media)
- *   navy   #13294C  brand navy (headings, body text, dark media, primary button)
- *   teal   #14A3A0  brand teal (accent: eyebrows, rules, CTAs, prices)
+ *   paper  #F6F7F9  cool off-white surface (page background, text on dark media)
+ *   navy   #121826  near-black ink (headings, body text, dark media, primary button)
+ *   teal   #1E6FD6  royal blue (accent: eyebrows, rules, CTAs, prices)
  */
 const config: Config = {
   content: [
@@ -20,25 +21,25 @@ const config: Config = {
       transparent: 'transparent',
       current: 'currentColor',
       paper: {
-        DEFAULT: '#F7F5F0',
-        2: '#EFEAE0', // warm tint band
-        3: '#E5EEEC', // cool teal wash band
+        DEFAULT: '#F6F7F9',
+        2: '#EDF0F5', // cool tint band
+        3: '#E6EDF8', // blue wash band
         // muted paper for text sitting ON dark media
-        dim: 'rgba(247, 245, 240, 0.74)',
-        faint: 'rgba(247, 245, 240, 0.42)',
+        dim: 'rgba(246, 247, 249, 0.74)',
+        faint: 'rgba(246, 247, 249, 0.42)',
       },
       navy: {
-        DEFAULT: '#13294C',
-        2: '#0E1F3A', // deeper navy for media scrims / dark panels
-        dim: 'rgba(19, 41, 76, 0.66)',
-        faint: 'rgba(19, 41, 76, 0.14)',
-        soft: 'rgba(19, 41, 76, 0.06)',
+        DEFAULT: '#121826',
+        2: '#0A0E18', // deeper ink for media scrims / dark panels
+        dim: 'rgba(18, 24, 38, 0.66)',
+        faint: 'rgba(18, 24, 38, 0.14)',
+        soft: 'rgba(18, 24, 38, 0.06)',
       },
       teal: {
-        DEFAULT: '#14A3A0',
-        deep: '#0C6E6C',
-        dim: 'rgba(20, 163, 160, 0.5)',
-        wash: 'rgba(20, 163, 160, 0.08)',
+        DEFAULT: '#1E6FD6',
+        deep: '#1553A6',
+        dim: 'rgba(30, 111, 214, 0.5)',
+        wash: 'rgba(30, 111, 214, 0.08)',
       },
     },
     fontFamily: {

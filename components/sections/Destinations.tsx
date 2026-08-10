@@ -143,15 +143,15 @@ function DestinationTile({
           className="pointer-events-none absolute inset-x-0 bottom-0 h-3/5"
           style={{
             background:
-              'linear-gradient(to top, rgba(11,22,42,0.9) 0%, rgba(11,22,42,0.5) 35%, rgba(11,22,42,0) 100%)',
+              'linear-gradient(to top, rgba(10,14,24,0.9) 0%, rgba(10,14,24,0.5) 35%, rgba(10,14,24,0) 100%)',
           }}
         />
         {/* Teal wash + inset ring on activate. */}
         <div
           className="pointer-events-none absolute inset-0 transition-all duration-500"
           style={{
-            backgroundColor: on ? 'rgba(20,163,160,0.16)' : 'transparent',
-            boxShadow: on ? 'inset 0 0 0 2px rgba(20,163,160,0.7)' : 'inset 0 0 0 0 transparent',
+            backgroundColor: on ? 'rgba(30,111,214,0.16)' : 'transparent',
+            boxShadow: on ? 'inset 0 0 0 2px rgba(30,111,214,0.7)' : 'inset 0 0 0 0 transparent',
           }}
         />
 
@@ -169,7 +169,7 @@ function DestinationTile({
           </span>
           <h3
             className="font-display text-3xl text-paper md:text-4xl"
-            style={{ textShadow: '0 2px 24px rgba(11,22,42,0.7)' }}
+            style={{ textShadow: '0 2px 24px rgba(10,14,24,0.7)' }}
           >
             {name}
           </h3>
