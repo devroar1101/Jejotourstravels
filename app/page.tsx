@@ -20,7 +20,7 @@ export default function Page() {
       <main id="top">
         <Hero />
         <Philosophy />
-        <MaskedBand word="Journeys" media="masked" />
+        <MaskedBand media="masked" />
         <Domestic />
         <SignatureJourneys />
         <Destinations />
