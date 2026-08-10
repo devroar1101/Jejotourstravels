@@ -42,6 +42,7 @@ const domesticTrips: Trip[] = domestic.map((d) => ({
   highlights: d.highlights,
   media: d.media,
   hasVideo: VIDEO_SLOTS.has(d.media),
+  price: d.price,
   duration: d.duration,
 }));
 
