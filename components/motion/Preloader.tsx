@@ -79,7 +79,7 @@ export default function Preloader() {
       {!reduced && (
         <video
           ref={videoRef}
-          className="absolute inset-0 h-full w-full object-contain"
+          className="absolute inset-0 h-full w-full object-cover"
           muted
           playsInline
           preload="auto"
