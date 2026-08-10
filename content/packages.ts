@@ -73,7 +73,7 @@ export const packages: Package[] = [
     slug: 'singapore',
     name: 'Singapore',
     region: 'Southeast Asia',
-    price: 39999,
+    price: 19999,
     duration: '4D / 3N',
     summary:
       'A precise, walkable city of gardens and waterfronts, well suited to first journeys abroad.',
@@ -89,7 +89,7 @@ export const packages: Package[] = [
     slug: 'dubai-uae',
     name: 'Dubai, UAE',
     region: 'The Gulf',
-    price: 36500,
+    price: 18999,
     duration: '4D / 3N',
     summary:
       'Height, water and desert in a few short days, from the Burj Khalifa to the dunes at dusk.',
@@ -121,7 +121,7 @@ export const packages: Package[] = [
     slug: 'thailand',
     name: 'Thailand',
     region: 'Southeast Asia',
-    price: 14999,
+    price: 13999,
     duration: '5D / 4N',
     summary:
       'Bangkok temples and markets, then the islands and beaches of the Andaman coast.',

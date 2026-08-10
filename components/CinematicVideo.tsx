@@ -226,9 +226,9 @@ const CinematicVideo = forwardRef<CinematicVideoHandle, CinematicVideoProps>(
             className="cv-scrim"
             aria-hidden
             style={{
-              background: `linear-gradient(180deg, rgba(14,31,58,${
+              background: `linear-gradient(180deg, rgba(10,14,24,${
                 scrim * 0.5
-              }) 0%, rgba(14,31,58,${scrim * 0.2}) 45%, rgba(14,31,58,${
+              }) 0%, rgba(10,14,24,${scrim * 0.2}) 45%, rgba(10,14,24,${
                 scrim
               }) 100%)`,
             }}

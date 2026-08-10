@@ -98,7 +98,7 @@ export default function DestinationPage({
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'linear-gradient(to top, rgba(11,22,42,0.9) 0%, rgba(11,22,42,0.35) 45%, rgba(11,22,42,0.15) 100%)',
+              'linear-gradient(to top, rgba(10,14,24,0.9) 0%, rgba(10,14,24,0.35) 45%, rgba(10,14,24,0.15) 100%)',
           }}
         />
         <div className="absolute inset-0 z-10 mx-auto flex max-w-editorial flex-col justify-end px-6 pb-12 md:px-12 md:pb-16">
@@ -201,7 +201,7 @@ export default function DestinationPage({
                     className="pointer-events-none absolute inset-0"
                     style={{
                       background:
-                        'linear-gradient(to top, rgba(11,22,42,0.85) 0%, rgba(11,22,42,0) 60%)',
+                        'linear-gradient(to top, rgba(10,14,24,0.85) 0%, rgba(10,14,24,0) 60%)',
                     }}
                   />
                   <h3 className="absolute inset-x-0 bottom-0 z-10 p-4 font-display text-xl text-paper">

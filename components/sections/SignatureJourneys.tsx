@@ -115,7 +115,7 @@ export default function SignatureJourneys() {
               style={{
                 boxShadow:
                   hovered === p.slug
-                    ? 'inset 0 0 0 2px rgba(20,163,160,0.7)'
+                    ? 'inset 0 0 0 2px rgba(30,111,214,0.7)'
                     : 'inset 0 0 0 0 transparent',
               }}
             />

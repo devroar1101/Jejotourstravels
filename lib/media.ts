@@ -22,6 +22,17 @@ const JPG_SLOTS = new Set([
   'rajasthan',
   'andaman',
   'himachal',
+  'golden-triangle',
+  'uttarakhand',
+  'darjeeling',
+  'ooty-kodaikanal',
+  'mysore-coorg',
+  'leh-ladakh',
+  // International — real photos supplied by the client.
+  'thailand',
+  'indonesia',
+  'almaty',
+  'baku',
 ]);
 
 export function posterPath(name: string): string {

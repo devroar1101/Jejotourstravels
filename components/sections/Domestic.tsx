@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import CinematicVideo from '@/components/CinematicVideo';
 import EnquiryCTA from '@/components/enquiry/EnquiryCTA';
 import { domestic } from '@/content/domestic';
+import { inr } from '@/content/packages';
 import { useIsTouch, useReducedMotion } from '@/lib/hooks';
 import { posterPath } from '@/lib/media';
 
@@ -107,6 +108,7 @@ export default function Domestic() {
             name={d.name}
             line={d.line}
             media={d.media}
+            price={d.price}
             touch={touch}
             active={active.includes(d.media)}
             onActivate={activate}
@@ -136,6 +138,7 @@ function DomesticCard({
   name,
   line,
   media,
+  price,
   touch,
   active,
   onActivate,
@@ -145,6 +148,7 @@ function DomesticCard({
   name: string;
   line: string;
   media: string;
+  price?: number;
   touch: boolean;
   active: boolean;
   onActivate: (n: string) => void;
@@ -213,7 +217,7 @@ function DomesticCard({
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            'linear-gradient(to top, rgba(11,22,42,0.85) 0%, rgba(11,22,42,0.15) 55%, rgba(11,22,42,0) 100%)',
+            'linear-gradient(to top, rgba(10,14,24,0.85) 0%, rgba(10,14,24,0.15) 55%, rgba(10,14,24,0) 100%)',
         }}
       />
       {/* Teal ring on activate. */}
@@ -221,7 +225,7 @@ function DomesticCard({
         className="pointer-events-none absolute inset-0 transition-shadow duration-500"
         style={{
           boxShadow: active
-            ? 'inset 0 0 0 2px rgba(20,163,160,0.7)'
+            ? 'inset 0 0 0 2px rgba(30,111,214,0.7)'
             : 'inset 0 0 0 0 transparent',
         }}
       />
@@ -231,11 +235,18 @@ function DomesticCard({
         </span>
         <h3
           className="font-display text-3xl text-paper md:text-4xl"
-          style={{ textShadow: '0 2px 20px rgba(11,22,42,0.7)' }}
+          style={{ textShadow: '0 2px 20px rgba(10,14,24,0.7)' }}
         >
           {name}
         </h3>
         <p className="mt-2 max-w-xs font-body text-sm text-paper-dim">{line}</p>
+        {price && (
+          <p className="mt-3 font-body text-sm text-paper">
+            from{' '}
+            <span className="font-display text-lg text-teal">{inr(price)}</span>
+            <span className="text-paper-dim"> / person</span>
+          </p>
+        )}
       </div>
     </Link>
   );

@@ -13,11 +13,14 @@ export interface DomesticPlace {
   summary: string;
   /** Itinerary highlights. */
   highlights: string[];
+  /** Per person, INR "starting from". Undefined = quoted on request. */
+  price?: number;
 }
 
 export const domestic: DomesticPlace[] = [
   {
     slug: 'kerala',
+    price: 12999,
     name: 'Kerala',
     line: 'Backwaters, houseboats and cool hill stations.',
     media: 'kerala',
@@ -82,6 +85,7 @@ export const domestic: DomesticPlace[] = [
   },
   {
     slug: 'andaman-lakshadweep',
+    price: 14999,
     name: 'Andaman & Lakshadweep',
     line: 'Islands, reefs and quiet white sand.',
     media: 'andaman',
@@ -98,6 +102,7 @@ export const domestic: DomesticPlace[] = [
   },
   {
     slug: 'himachal',
+    price: 12999,
     name: 'Himachal',
     line: 'Mountain valleys, pine and river towns.',
     media: 'himachal',
@@ -114,6 +119,7 @@ export const domestic: DomesticPlace[] = [
   },
   {
     slug: 'golden-triangle',
+    price: 12999,
     name: 'Golden Triangle',
     line: 'Delhi, Agra and Jaipur in one classic loop.',
     media: 'golden-triangle',
@@ -146,6 +152,7 @@ export const domestic: DomesticPlace[] = [
   },
   {
     slug: 'darjeeling',
+    price: 12999,
     name: 'Darjeeling',
     line: 'Tea gardens, toy train and Kanchenjunga.',
     media: 'darjeeling',
@@ -162,6 +169,7 @@ export const domestic: DomesticPlace[] = [
   },
   {
     slug: 'ooty-kodaikanal',
+    price: 10999,
     name: 'Ooty & Kodaikanal',
     line: 'Nilgiri hill stations and mountain railways.',
     media: 'ooty-kodaikanal',
@@ -178,6 +186,7 @@ export const domestic: DomesticPlace[] = [
   },
   {
     slug: 'mysore-coorg',
+    price: 10999,
     name: 'Mysore & Coorg',
     line: 'Palace city and the coffee hills.',
     media: 'mysore-coorg',

@@ -32,12 +32,12 @@
   --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
   --font-body: 'HankenGrotesk', system-ui, -apple-system, sans-serif;
 
-  /* Coastal Editorial — brand-derived light palette. */
-  --paper: #f7f5f0;
-  --navy: #13294c;
-  --navy-2: #0e1f3a;
-  --teal: #14a3a0;
-  --teal-deep: #0c6e6c;
+  /* Azure Premium — brand-derived light palette. */
+  --paper: #f6f7f9;
+  --navy: #121826;
+  --navy-2: #0a0e18;
+  --teal: #1e6fd6;
+  --teal-deep: #1553a6;
 }
 
 @layer base {
