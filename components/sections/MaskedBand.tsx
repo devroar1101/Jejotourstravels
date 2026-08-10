@@ -13,19 +13,97 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-// Small clickable cards that float over the mosaic (desktop only), each a
-// rounded photo with a price sticker linking to its detail page.
-const FLOATS = [
-  { slug: 'maldives-mauritius', media: 'maldives-mauritius', price: 64900, pos: 'left-[3%] top-[9%]' },
-  { slug: 'dubai-uae', media: 'dubai-uae', price: 18999, pos: 'right-[3%] top-[7%]' },
-  { slug: 'kerala', media: 'kerala', price: 12999, pos: 'left-[6%] bottom-[9%]' },
-  { slug: 'thailand', media: 'thailand', price: 13999, pos: 'right-[5%] bottom-[8%]' },
+interface Pkg {
+  name: string;
+  slug: string;
+  media: string;
+  price: number;
+}
+
+// The eight headline packages (combined routes point to their closest page).
+const PACKAGES: Pkg[] = [
+  { name: 'Ooty · Kodaikanal · Coorg', slug: 'ooty-kodaikanal', media: 'ooty-kodaikanal', price: 10999 },
+  { name: 'Kerala', slug: 'kerala', media: 'kerala', price: 12999 },
+  { name: 'Andaman Island', slug: 'andaman-lakshadweep', media: 'andaman', price: 14999 },
+  { name: 'Delhi · Shimla · Kullu Manali · Darjeeling', slug: 'golden-triangle', media: 'darjeeling', price: 12999 },
+  { name: 'Malaysia', slug: 'malaysia', media: 'malaysia', price: 10999 },
+  { name: 'Singapore', slug: 'singapore', media: 'singapore', price: 19999 },
+  { name: 'Dubai', slug: 'dubai-uae', media: 'dubai-uae', price: 18999 },
+  { name: 'Thailand', slug: 'thailand', media: 'thailand', price: 13999 },
 ];
 
+// Desktop float positions ringing the centred title.
+const POS = [
+  'left-[2%] top-[5%]',
+  'left-[2%] top-[39%]',
+  'left-[2%] bottom-[7%]',
+  'left-1/2 -translate-x-1/2 top-[3%]',
+  'left-1/2 -translate-x-1/2 bottom-[5%]',
+  'right-[2%] top-[5%]',
+  'right-[2%] top-[39%]',
+  'right-[2%] bottom-[7%]',
+];
+
+function PackageCard({
+  p,
+  showName = false,
+  onDark = false,
+}: {
+  p: Pkg;
+  showName?: boolean;
+  onDark?: boolean;
+}) {
+  return (
+    <Link
+      href={`/destinations/${p.slug}/`}
+      data-cursor="VIEW"
+      aria-label={`${p.name} — from ${inr(p.price)} per person`}
+      className="group block"
+    >
+      <div className="relative overflow-hidden rounded-xl shadow-[0_18px_44px_-18px_rgba(10,14,24,0.8)] ring-1 ring-white/40 transition-transform duration-500 ease-editorial group-hover:-translate-y-1">
+        <img
+          src={posterPath(p.media)}
+          alt=""
+          width={400}
+          height={533}
+          loading="lazy"
+          decoding="async"
+          className="aspect-[3/4] w-full object-cover transition-transform duration-700 ease-editorial group-hover:scale-105"
+        />
+        <div
+          className="absolute bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2.5 py-1 text-center"
+          style={{
+            background: '#A3D45F',
+            boxShadow: '0 8px 20px -8px rgba(10,14,24,0.6)',
+          }}
+        >
+          <span className="block font-body text-[0.45rem] font-semibold uppercase leading-none tracking-[0.14em] text-navy/70">
+            Starting from
+          </span>
+          <span className="mt-0.5 block font-display text-sm font-semibold leading-none text-navy">
+            {inr(p.price)}
+            <span className="ml-0.5 font-body text-[0.62em] font-medium">/pp</span>
+          </span>
+        </div>
+      </div>
+      {showName && (
+        <h3
+          className={`mt-3 text-center font-display text-sm leading-tight transition-colors group-hover:text-teal ${
+            onDark ? 'text-paper' : 'text-navy'
+          }`}
+        >
+          {p.name}
+        </h3>
+      )}
+    </Link>
+  );
+}
+
 /**
- * "Travel the World" band — a mosaic of every destination that opens on scroll
- * via an animated clip-path, with a serif title set over it. The background is
- * the all-destinations collage (media="masked").
+ * "Travel the World" — a mosaic of every destination with a serif title, ringed
+ * by the eight headline package cards (each links to its detail page). On
+ * desktop the cards float around the title; on phones they stack in a grid
+ * below the band.
  */
 export default function MaskedBand({
   eyebrow = 'Domestic & International Tour Packages',
@@ -44,7 +122,7 @@ export default function MaskedBand({
     const ctx = gsap.context(() => {
       gsap.fromTo(
         el,
-        { clipPath: 'inset(42% 8% 42% 8%)' },
+        { clipPath: 'inset(34% 6% 34% 6%)' },
         {
           clipPath: 'inset(0% 0% 0% 0%)',
           ease: 'none',
@@ -67,8 +145,8 @@ export default function MaskedBand({
     >
       <div
         ref={bandRef}
-        className="relative h-[52vh] w-full overflow-hidden md:h-[70vh]"
-        style={reduced ? undefined : { clipPath: 'inset(42% 8% 42% 8%)' }}
+        className="relative h-[56vh] w-full overflow-hidden md:h-[88vh]"
+        style={reduced ? undefined : { clipPath: 'inset(34% 6% 34% 6%)' }}
       >
         <CinematicVideo
           name={media}
@@ -91,7 +169,7 @@ export default function MaskedBand({
             <h2
               className="font-display leading-[0.92] text-paper"
               style={{
-                fontSize: 'clamp(2.6rem, 7vw, 7rem)',
+                fontSize: 'clamp(2.4rem, 6.5vw, 6.5rem)',
                 textShadow: '0 4px 40px rgba(10,14,24,0.6)',
               }}
             >
@@ -103,41 +181,23 @@ export default function MaskedBand({
         </div>
 
         {/* Floating clickable package cards (desktop). */}
-        {FLOATS.map((f) => (
-          <Link
-            key={f.slug}
-            href={`/destinations/${f.slug}/`}
-            data-cursor="VIEW"
-            aria-label={`${f.slug} — from ${inr(f.price)} per person`}
-            className={`group absolute z-20 hidden w-32 md:block lg:w-40 ${f.pos}`}
+        {PACKAGES.map((p, i) => (
+          <div
+            key={p.slug}
+            className={`absolute z-20 hidden w-24 md:block lg:w-28 xl:w-32 ${POS[i]}`}
           >
-            <div className="relative overflow-hidden rounded-xl shadow-[0_18px_44px_-18px_rgba(10,14,24,0.8)] ring-1 ring-white/40 transition-transform duration-500 ease-editorial group-hover:-translate-y-1">
-              <img
-                src={posterPath(f.media)}
-                alt=""
-                width={400}
-                height={533}
-                loading="lazy"
-                decoding="async"
-                className="aspect-[3/4] w-full object-cover transition-transform duration-700 ease-editorial group-hover:scale-105"
-              />
-              <div
-                className="absolute bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2.5 py-1"
-                style={{
-                  background: '#A3D45F',
-                  boxShadow: '0 8px 20px -8px rgba(10,14,24,0.6)',
-                }}
-              >
-                <span className="block font-display text-xs font-semibold leading-none text-navy">
-                  {inr(f.price)}
-                  <span className="ml-0.5 font-body text-[0.62em] font-medium">
-                    /pp
-                  </span>
-                </span>
-              </div>
-            </div>
-          </Link>
+            <PackageCard p={p} />
+          </div>
         ))}
+      </div>
+
+      {/* Mobile: the same packages as a grid below the band. */}
+      <div className="mx-auto mt-10 max-w-editorial px-6 md:hidden">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-9">
+          {PACKAGES.map((p) => (
+            <PackageCard key={p.slug} p={p} showName />
+          ))}
+        </div>
       </div>
     </section>
   );

@@ -2,7 +2,6 @@ import Nav from '@/components/sections/Nav';
 import Hero from '@/components/sections/Hero';
 import Philosophy from '@/components/sections/Philosophy';
 import MaskedBand from '@/components/sections/MaskedBand';
-import TourPackages from '@/components/sections/TourPackages';
 import Domestic from '@/components/sections/Domestic';
 import SignatureJourneys from '@/components/sections/SignatureJourneys';
 import Destinations from '@/components/sections/Destinations';
@@ -22,7 +21,6 @@ export default function Page() {
         <Hero />
         <Philosophy />
         <MaskedBand media="masked" />
-        <TourPackages />
         <Domestic />
         <SignatureJourneys />
         <Destinations />
