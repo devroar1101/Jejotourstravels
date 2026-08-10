@@ -7,6 +7,7 @@ import SignatureJourneys from '@/components/sections/SignatureJourneys';
 import Destinations from '@/components/sections/Destinations';
 import ScrubMoment from '@/components/sections/ScrubMoment';
 import Services from '@/components/sections/Services';
+import WhyJejo from '@/components/sections/WhyJejo';
 import Testimonials from '@/components/sections/Testimonials';
 import Enquiry from '@/components/sections/Enquiry';
 import WordmarkKnockout from '@/components/sections/WordmarkKnockout';
@@ -25,6 +26,7 @@ export default function Page() {
         <Destinations />
         <ScrubMoment />
         <Services />
+        <WhyJejo />
         <Testimonials />
         <Enquiry />
         <WordmarkKnockout word="JEJO" media="hero" />

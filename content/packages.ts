@@ -57,7 +57,7 @@ export const packages: Package[] = [
     slug: 'malaysia',
     name: 'Malaysia',
     region: 'Southeast Asia',
-    price: 39999,
+    price: 10999,
     duration: '4D / 3N',
     summary:
       'City towers, island coast and cool highland tea gardens across a single, easy route.',
@@ -105,7 +105,7 @@ export const packages: Package[] = [
     slug: 'sri-lanka',
     name: 'Sri Lanka',
     region: 'Indian Ocean',
-    price: 35900,
+    price: 19999,
     duration: '4D / 3N',
     summary:
       'Hill country, tea estates and the southern coast, close to home and quietly varied.',
@@ -121,6 +121,7 @@ export const packages: Package[] = [
     slug: 'thailand',
     name: 'Thailand',
     region: 'Southeast Asia',
+    price: 14999,
     duration: '5D / 4N',
     summary:
       'Bangkok temples and markets, then the islands and beaches of the Andaman coast.',

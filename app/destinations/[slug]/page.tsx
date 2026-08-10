@@ -65,12 +65,15 @@ export default function DestinationPage({
       {/* Slim static header */}
       <header className="fixed inset-x-0 top-0 z-50 bg-paper/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-editorial items-center justify-between px-6 py-4 md:px-12">
-          <Link href="/" className="flex flex-col leading-none text-navy" aria-label="JEJO Tours and Travels — home">
-            <span className="font-display text-lg font-semibold leading-none tracking-tight">
-              JEJO
-            </span>
-            <span className="mt-1 font-body text-[0.5rem] uppercase leading-none tracking-[0.28em] opacity-80">
-              Tours &amp; Travels
+          <Link href="/" className="flex items-center gap-3" aria-label="JEJO Tours and Travels — home">
+            <img src="/logo-mark.png" alt="JEJO Tours &amp; Travels" className="h-9 w-auto" />
+            <span className="flex flex-col leading-none text-navy">
+              <span className="font-display text-lg font-semibold leading-none tracking-tight">
+                JEJO
+              </span>
+              <span className="mt-1 font-body text-[0.5rem] uppercase leading-none tracking-[0.28em] opacity-80">
+                Tours &amp; Travels
+              </span>
             </span>
           </Link>
           <Link
