@@ -119,7 +119,14 @@ export default function SignatureJourneys() {
                     : 'inset 0 0 0 0 transparent',
               }}
             />
-            <div className="relative z-10 p-7">
+            {/* Whole card opens the trip summary. */}
+            <Link
+              href={`/destinations/${p.slug}/`}
+              aria-label={`${p.name} — view trip summary`}
+              data-cursor="VIEW"
+              className="absolute inset-0 z-[1]"
+            />
+            <div className="pointer-events-none relative z-10 p-7">
               <div className="mb-4 flex items-center justify-between">
                 <span className="eyebrow" style={{ color: 'var(--paper)' }}>{`0${i + 1}`}</span>
                 <span className="font-body text-sm text-paper-dim">
@@ -127,13 +134,7 @@ export default function SignatureJourneys() {
                 </span>
               </div>
               <h3 className="font-display text-4xl leading-none text-paper md:text-5xl">
-                <Link
-                  href={`/destinations/${p.slug}/`}
-                  className="transition-colors hover:text-teal"
-                  data-cursor="VIEW"
-                >
-                  {p.name}
-                </Link>
+                {p.name}
               </h3>
               <p className="mt-4 max-w-sm font-body text-paper-dim">
                 {p.summary}
@@ -153,13 +154,13 @@ export default function SignatureJourneys() {
                     Price on request
                   </p>
                 )}
-                <div className="flex items-center gap-5">
+                <div className="pointer-events-auto flex items-center gap-5">
                   <Link
                     href={`/destinations/${p.slug}/`}
                     className="link-underline font-body text-sm text-paper-dim hover:text-paper"
                     data-cursor="VIEW"
                   >
-                    Details
+                    Summary
                   </Link>
                   <EnquiryCTA slug={p.slug} variant="text">
                     Enquire

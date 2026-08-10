@@ -184,7 +184,13 @@ const CinematicVideo = forwardRef<CinematicVideoHandle, CinematicVideoProps>(
           width={width}
           height={height}
           className="cv-poster"
-          style={{ objectPosition: position }}
+          style={{
+            objectPosition: position,
+            // Fade the poster out once the video is on screen so it never
+            // flashes back in — e.g. between playlist clips as they reload.
+            opacity: videoVisible ? 0 : 1,
+            transition: 'opacity 0.6s ease',
+          }}
           decoding="async"
           loading={mode === 'hero' ? 'eager' : 'lazy'}
         />
