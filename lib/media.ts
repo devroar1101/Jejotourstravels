@@ -22,12 +22,6 @@ const JPG_SLOTS = new Set([
   'rajasthan',
   'andaman',
   'himachal',
-  // Temporary collage placeholders (built from real travel photos) until the
-  // client supplies dedicated photography for these routes.
-  'thailand',
-  'indonesia',
-  'almaty',
-  'baku',
 ]);
 
 export function posterPath(name: string): string {
