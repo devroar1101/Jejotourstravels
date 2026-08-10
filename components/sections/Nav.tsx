@@ -30,16 +30,36 @@ export default function Nav() {
       <div className="mx-auto flex max-w-editorial items-center justify-between px-6 py-5 md:px-12">
         <a
           href="#top"
-          className={`flex flex-col leading-none transition-colors ${
-            solid ? 'text-navy' : 'text-paper'
-          }`}
+          className="flex items-center gap-3"
           aria-label="JEJO Tours and Travels — home"
         >
-          <span className="font-display text-xl font-semibold leading-none tracking-tight">
-            JEJO
+          {/* Brand mark — colour on the solid bar, white over the hero. */}
+          <span className="relative inline-flex h-9 items-center">
+            <img
+              src="/logo-mark.png"
+              alt="JEJO Tours &amp; Travels"
+              className="h-9 w-auto transition-opacity duration-500"
+              style={{ opacity: solid ? 1 : 0 }}
+            />
+            <img
+              src="/logo-mark-light.png"
+              alt=""
+              aria-hidden
+              className="absolute left-0 top-0 h-9 w-auto transition-opacity duration-500"
+              style={{ opacity: solid ? 0 : 1 }}
+            />
           </span>
-          <span className="mt-1 font-body text-[0.55rem] uppercase leading-none tracking-[0.28em] opacity-80">
-            Tours &amp; Travels
+          <span
+            className={`flex flex-col leading-none transition-colors ${
+              solid ? 'text-navy' : 'text-paper'
+            }`}
+          >
+            <span className="font-display text-xl font-semibold leading-none tracking-tight">
+              JEJO
+            </span>
+            <span className="mt-1 font-body text-[0.55rem] uppercase leading-none tracking-[0.28em] opacity-80">
+              Tours &amp; Travels
+            </span>
           </span>
         </a>
 

@@ -295,6 +295,7 @@ const posters = [
   { name: 'darjeeling', w: 1000, h: 1333, v: { seed: 309, horizon: 0.56, sunX: 0.66, haze: 0.85 } },
   { name: 'ooty-kodaikanal', w: 1000, h: 1333, v: { seed: 310, horizon: 0.6, sunX: 0.42, skyHorizon: TEAL_DEEP, haze: 0.8 } },
   { name: 'mysore-coorg', w: 1000, h: 1333, v: { seed: 311, horizon: 0.62, sunX: 0.7, sunStrength: 0.95 } },
+  { name: 'leh-ladakh', w: 1000, h: 1333, v: { seed: 312, horizon: 0.46, sunX: 0.5, skyHorizon: TEAL_DEEP, haze: 0.9, sunColor: [225, 236, 232] } },
   // International — newer routes awaiting real photography (portrait cards).
   { name: 'thailand', w: 1200, h: 1500, v: { seed: 401, horizon: 0.66, sunX: 0.6, sunStrength: 1.0, reflection: 0.8 } },
   { name: 'indonesia', w: 1200, h: 1500, v: { seed: 402, horizon: 0.62, sunX: 0.7, skyHorizon: TEAL_DEEP, haze: 0.85 } },

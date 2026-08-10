@@ -192,6 +192,22 @@ export const domestic: DomesticPlace[] = [
       'Dubare elephant camp',
     ],
   },
+  {
+    slug: 'leh-ladakh',
+    name: 'Leh & Ladakh',
+    line: 'High passes, blue lakes and monasteries.',
+    media: 'leh-ladakh',
+    region: 'Ladakh',
+    duration: '6D / 5N',
+    summary:
+      'The high desert of Ladakh — Pangong Lake, the Nubra valley over Khardung La, and the monasteries above Leh.',
+    highlights: [
+      'Pangong Lake',
+      'Nubra valley and Khardung La',
+      'Leh monasteries',
+      'Magnetic Hill and Sangam',
+    ],
+  },
 ];
 
 export const domesticBySlug = (slug: string): DomesticPlace | undefined =>
