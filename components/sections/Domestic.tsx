@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import CinematicVideo from '@/components/CinematicVideo';
-import PriceTag from '@/components/PriceTag';
 import EnquiryCTA from '@/components/enquiry/EnquiryCTA';
 import { domestic } from '@/content/domestic';
 import { useIsTouch, useReducedMotion } from '@/lib/hooks';
@@ -241,9 +240,6 @@ function DomesticCard({
         </h3>
         <p className="mt-2 max-w-xs font-body text-sm text-paper-dim">{line}</p>
       </div>
-
-      {/* Flyer-style price sticker over the image. */}
-      {price && <PriceTag price={price} />}
     </Link>
   );
 }

@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import CinematicVideo from '@/components/CinematicVideo';
-import PriceTag from '@/components/PriceTag';
 import EnquiryCTA from '@/components/enquiry/EnquiryCTA';
 import { packages } from '@/content/packages';
 import { useReducedMotion } from '@/lib/hooks';
@@ -126,8 +125,6 @@ export default function SignatureJourneys() {
               data-cursor="VIEW"
               className="absolute inset-0 z-[1]"
             />
-            {/* Flyer-style price sticker over the image. */}
-            <PriceTag price={p.price} />
             <div className="pointer-events-none relative z-10 p-7">
               <div className="mb-4 flex items-center justify-between">
                 <span className="eyebrow" style={{ color: 'var(--paper)' }}>{`0${i + 1}`}</span>
