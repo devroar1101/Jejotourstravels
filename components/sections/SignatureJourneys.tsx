@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import CinematicVideo from '@/components/CinematicVideo';
-import CountUp from '@/components/motion/CountUp';
 import EnquiryCTA from '@/components/enquiry/EnquiryCTA';
 import { packages } from '@/content/packages';
 import { useReducedMotion } from '@/lib/hooks';
@@ -139,21 +138,7 @@ export default function SignatureJourneys() {
               <p className="mt-4 max-w-sm font-body text-paper-dim">
                 {p.summary}
               </p>
-              <div className="mt-6 flex items-center justify-between">
-                {p.price ? (
-                  <p className="font-body text-sm text-paper-dim">
-                    from{' '}
-                    <CountUp
-                      value={p.price}
-                      className="font-display text-2xl text-teal"
-                    />
-                    <span className="ml-1">/ person</span>
-                  </p>
-                ) : (
-                  <p className="font-display text-lg text-teal">
-                    Price on request
-                  </p>
-                )}
+              <div className="mt-6 flex items-center justify-end">
                 <div className="pointer-events-auto flex items-center gap-5">
                   <Link
                     href={`/destinations/${p.slug}/`}

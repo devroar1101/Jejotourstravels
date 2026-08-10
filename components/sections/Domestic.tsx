@@ -7,7 +7,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import CinematicVideo from '@/components/CinematicVideo';
 import EnquiryCTA from '@/components/enquiry/EnquiryCTA';
 import { domestic } from '@/content/domestic';
-import { inr } from '@/content/packages';
 import { useIsTouch, useReducedMotion } from '@/lib/hooks';
 import { posterPath } from '@/lib/media';
 
@@ -240,13 +239,6 @@ function DomesticCard({
           {name}
         </h3>
         <p className="mt-2 max-w-xs font-body text-sm text-paper-dim">{line}</p>
-        {price && (
-          <p className="mt-3 font-body text-sm text-paper">
-            from{' '}
-            <span className="font-display text-lg text-teal">{inr(price)}</span>
-            <span className="text-paper-dim"> / person</span>
-          </p>
-        )}
       </div>
     </Link>
   );
