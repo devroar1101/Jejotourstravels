@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useReducedMotion } from '@/lib/hooks';
+import { useConstrainedNetwork, useReducedMotion } from '@/lib/hooks';
 
 /**
  * Splash — the aircraft/globe clip plays full-bleed on a deep-navy field, then
@@ -11,6 +11,10 @@ import { useReducedMotion } from '@/lib/hooks';
  */
 export default function Preloader() {
   const reduced = useReducedMotion();
+  const constrained = useConstrainedNetwork();
+  // Skip the splash video (a ~3 MB download) under reduced motion or a slow /
+  // Save-Data connection; fall back to a brief hold.
+  const skipVideo = reduced || constrained;
   const videoRef = useRef<HTMLVideoElement>(null);
   const [wipe, setWipe] = useState(false);
   const [done, setDone] = useState(false);
@@ -33,7 +37,7 @@ export default function Preloader() {
       );
     };
 
-    if (reduced) {
+    if (skipVideo) {
       const t = window.setTimeout(close, 500);
       return () => {
         window.clearTimeout(t);
@@ -62,7 +66,7 @@ export default function Preloader() {
       v?.removeEventListener('error', finish);
       document.body.style.overflow = '';
     };
-  }, [reduced]);
+  }, [skipVideo, reduced]);
 
   if (done) return null;
 
@@ -78,7 +82,7 @@ export default function Preloader() {
           : 'transform 0.75s cubic-bezier(0.76,0,0.24,1)',
       }}
     >
-      {!reduced && (
+      {!skipVideo && (
         <video
           ref={videoRef}
           className="absolute inset-0 h-full w-full object-cover"

@@ -91,11 +91,9 @@ const CinematicVideo = forwardRef<CinematicVideoHandle, CinematicVideoProps>(
     const playlist = clips && clips.length > 0 ? clips : null;
     const isPlaylist = playlist !== null;
 
-    // Suppress video only under reduced motion. A stale/incorrect
-    // effectiveType reading on mobile must never hide the hero, so the
-    // constrained-network signal no longer gates playback.
-    void constrained;
-    const posterOnly = reduced;
+    // Stay on the poster (skip the heavy video download) under reduced motion
+    // or a constrained connection — Save-Data on, or a slow effective type.
+    const posterOnly = reduced || constrained;
     const shouldMount = inView && !posterOnly;
 
     useImperativeHandle(ref, () => ({
