@@ -24,6 +24,10 @@ export default function EnquiryDrawer() {
   const panelRef = useRef<HTMLDivElement>(null);
   const [blocked, setBlocked] = useState(false);
   const [copied, setCopied] = useState(false);
+  // "Somewhere else" reveals a free-text destination field.
+  const [custom, setCustom] = useState(
+    () => draft.slug === null && draft.destination.trim().length > 0,
+  );
 
   const message = buildMessage(draft);
   const atReview = step >= TOTAL_STEPS;
@@ -162,30 +166,59 @@ export default function EnquiryDrawer() {
                           <Chip
                             key={p.slug}
                             active={draft.slug === p.slug}
-                            onClick={() =>
+                            onClick={() => {
+                              setCustom(false);
                               update({
                                 destination: p.name,
                                 slug: p.slug,
                                 price: p.price ? `${inr(p.price)} onwards` : '',
-                              })
-                            }
+                              });
+                            }}
                           >
                             {p.name}
                           </Chip>
                         ))}
                         <Chip
-                          active={draft.destination === 'Somewhere else'}
-                          onClick={() =>
+                          active={custom}
+                          onClick={() => {
+                            setCustom(true);
                             update({
                               destination: 'Somewhere else',
                               slug: null,
                               price: '',
-                            })
-                          }
+                            });
+                          }}
                         >
                           Somewhere else
                         </Chip>
                       </div>
+
+                      {custom && (
+                        <label className="mt-6 block">
+                          <span className="mb-2 block font-body text-sm text-navy-dim">
+                            Where to?
+                          </span>
+                          <input
+                            type="text"
+                            autoFocus
+                            value={
+                              draft.destination === 'Somewhere else'
+                                ? ''
+                                : draft.destination
+                            }
+                            onChange={(e) => {
+                              const v = e.target.value;
+                              update({
+                                destination: v.trim() ? v : 'Somewhere else',
+                                slug: null,
+                                price: '',
+                              });
+                            }}
+                            className="w-full border-b border-navy-faint bg-transparent py-3 font-display text-2xl text-navy outline-none transition-colors focus:border-teal"
+                            placeholder="City, country or region"
+                          />
+                        </label>
+                      )}
                     </Fieldset>
                   )}
 
